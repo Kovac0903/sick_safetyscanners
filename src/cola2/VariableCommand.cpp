@@ -66,12 +66,12 @@ bool VariableCommand::processReply()
   if ((getCommandType() == 'R' && getCommandMode() == 'A') ||
       (getCommandType() == 0x52 && getCommandMode() == 0x41))
   {
-    ROS_INFO("Command Variable Acknowledged.");
+    printf("Command Variable Acknowledged.\n");
     result = true;
   }
   else
   {
-    ROS_WARN("Command Variable Not Accepted.");
+    printf("Command Variable Not Accepted.\n");
     result = false;
   }
   return result;

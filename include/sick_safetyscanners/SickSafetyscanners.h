@@ -35,7 +35,7 @@
 #ifndef SICK_SAFETYSCANNERS_SICKSAFETYSCANNERS_H
 #define SICK_SAFETYSCANNERS_SICKSAFETYSCANNERS_H
 
-#include <ros/ros.h>
+//#include <ros/ros.h>
 
 #include <boost/function.hpp>
 #include <boost/scoped_ptr.hpp>

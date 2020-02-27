@@ -44,18 +44,18 @@ AsyncUDPClient::AsyncUDPClient(const PacketHandler& packet_handler,
   , m_io_service(io_service)
 {
   // Keep io_service busy
-  m_io_work_ptr = std::make_shared<boost::asio::io_service::work>(boost::ref(m_io_service));
+  m_io_work_ptr = std::make_shared<boost::asio::io_service::work>(m_io_service);
   try
   {
     m_socket_ptr = std::make_shared<boost::asio::ip::udp::socket>(
-      boost::ref(m_io_service),
+      m_io_service,
       boost::asio::ip::udp::endpoint(boost::asio::ip::udp::v4(), local_port));
   }
   catch (std::exception& e)
   {
-    ROS_ERROR("Exception while creating socket: %s", e.what());
+    printf("Exception while creating socket: %s\n", e.what());
   }
-  ROS_INFO("UDP client is setup");
+  printf("UDP client is setup\n");
 }
 
 AsyncUDPClient::~AsyncUDPClient()
@@ -82,7 +82,7 @@ void AsyncUDPClient::handleReceive(const boost::system::error_code& error,
   }
   else
   {
-    ROS_ERROR("Error in UDP handle receive: %i", error.value());
+    printf("Error in UDP handle receive: %i\n", error.value());
   }
   startReceive();
 }

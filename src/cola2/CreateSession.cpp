@@ -67,12 +67,12 @@ bool CreateSession::processReply()
       (getCommandType() == 0x4F && getCommandMode() == 0x41))
   {
     m_session.setSessionID(getSessionID());
-    ROS_INFO("Successfully opened Cola2 session with sessionID: %u", m_session.getSessionID());
+    printf("Successfully opened Cola2 session with sessionID: %u\n", m_session.getSessionID());
     result = true;
   }
   else
   {
-    ROS_WARN("Could not open Cola2 session");
+    printf("Could not open Cola2 session\n");
   }
   return result;
 }

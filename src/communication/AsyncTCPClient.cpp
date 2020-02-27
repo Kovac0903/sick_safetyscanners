@@ -45,17 +45,17 @@ AsyncTCPClient::AsyncTCPClient(const PacketHandler& packet_handler,
 
 {
   // Keep io_service busy
-  m_io_work_ptr = std::make_shared<boost::asio::io_service::work>(boost::ref(m_io_service));
+  m_io_work_ptr = std::make_shared<boost::asio::io_service::work>(m_io_service);
   try
   {
-    m_socket_ptr = std::make_shared<boost::asio::ip::tcp::socket>(boost::ref(m_io_service));
+    m_socket_ptr = std::make_shared<boost::asio::ip::tcp::socket>(m_io_service);
   }
   catch (std::exception& e)
   {
-    ROS_ERROR("Exception while creating socket: %s", e.what());
+    printf("Exception while creating socket: %s\n", e.what());
   }
   m_remote_endpoint = boost::asio::ip::tcp::endpoint(server_ip, server_port);
-  ROS_INFO("TCP client is setup");
+  printf("TCP client is setup\n");
 }
 
 AsyncTCPClient::~AsyncTCPClient() {}
@@ -65,23 +65,23 @@ void AsyncTCPClient::doDisconnect()
   boost::mutex::scoped_lock lock(m_socket_mutex);
   boost::system::error_code ec;
   m_socket_ptr->shutdown(boost::asio::ip::tcp::socket::shutdown_both, ec);
-  if (ec != 0)
+  if (ec != boost::system::errc::success)
   {
-    ROS_ERROR("Error shutting socket down: %i", ec.value());
+    printf("Error shutting socket down: %i\n", ec.value());
   }
   else
   {
-    ROS_INFO("TCP Connection successfully shutdown");
+    printf("TCP Connection successfully shutdown\n");
   }
 
   m_socket_ptr->close(ec);
-  if (ec != 0)
+  if (ec != boost::system::errc::success)
   {
-    ROS_ERROR("Error closing Socket: %i", ec.value());
+    printf("Error closing Socket: %i\n", ec.value());
   }
   else
   {
-    ROS_INFO("TCP Socket successfully closed.");
+    printf("TCP Socket successfully closed.\n");
   }
 }
 
@@ -90,13 +90,13 @@ void AsyncTCPClient::doConnect()
   boost::mutex::scoped_lock lock(m_socket_mutex);
   boost::mutex::scoped_lock lock_connect(m_connect_mutex);
   m_socket_ptr->async_connect(m_remote_endpoint, [this](boost::system::error_code ec) {
-    if (ec != 0)
+    if (ec != boost::system::errc::success)
     {
-      ROS_ERROR("TCP error code: %i", ec.value());
+      printf("TCP error code: %i\n", ec.value());
     }
     else
     {
-      ROS_INFO("TCP connection successfully established.");
+      printf("TCP connection successfully established.\n");
     }
     m_connect_condition.notify_all();
   });
@@ -147,7 +147,7 @@ void AsyncTCPClient::handleSendAndReceive(const boost::system::error_code& error
   }
   else
   {
-    ROS_ERROR("Error in tcp handle send and receive: %i", error.value());
+    printf("Error in tcp handle send and receive: %i\n", error.value());
   }
 }
 
@@ -164,7 +164,7 @@ void AsyncTCPClient::handleReceive(const boost::system::error_code& error,
   }
   else
   {
-    ROS_ERROR("Error in tcp handle receive: %i", error.value());
+    printf("Error in tcp handle receive: %i\n", error.value());
   }
 }
 
