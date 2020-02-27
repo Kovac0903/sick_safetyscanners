@@ -45,6 +45,7 @@
 #include <sick_safetyscanners/data_processing/ReadWriteHelper.hpp>
 
 #include <boost/thread/mutex.hpp>
+#include <boost/thread/condition_variable.hpp>
 
 namespace sick {
 namespace cola2 {
@@ -82,7 +83,7 @@ public:
   /*!
    * \brief Locks a mutex to prevent other commands being executed in parallel.
    */
-  void lockExecutionMutex();
+  void setExecutionInProgress();
 
   /*!
    * \brief Adds the data to the telegram and afterwards the header with the correct length.
@@ -198,6 +199,8 @@ private:
   std::shared_ptr<sick::data_processing::ParseTCPPacket> m_tcp_parser_ptr;
 
   boost::mutex m_execution_mutex;
+  boost::condition_variable cv;
+  bool m_execution_in_progress;
 
   bool m_was_successful;
 

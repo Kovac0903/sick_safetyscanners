@@ -47,12 +47,15 @@ Command::Command(Cola2Session& session, const uint16_t& command_type, const uint
 {
   m_session_id     = m_session.getSessionID();
   m_request_id     = m_session.getNextRequestID();
+  m_execution_in_progress = false;
   m_tcp_parser_ptr = std::make_shared<sick::data_processing::ParseTCPPacket>();
 }
 
-void Command::lockExecutionMutex()
+void Command::setExecutionInProgress()
 {
-  m_execution_mutex.lock();
+  boost::mutex::scoped_lock lock(m_execution_mutex);
+  cv.wait(lock,[this]() {return !m_execution_in_progress;});
+  m_execution_in_progress = true;
 }
 
 std::vector<uint8_t> Command::constructTelegram(const std::vector<uint8_t>& telegram) const
@@ -63,14 +66,18 @@ std::vector<uint8_t> Command::constructTelegram(const std::vector<uint8_t>& tele
 
 void Command::processReplyBase(const std::vector<uint8_t>& packet)
 {
+
   m_tcp_parser_ptr->parseTCPSequence(packet, *this);
   m_was_successful = processReply();
-  m_execution_mutex.unlock();
+  boost::mutex::scoped_lock lock(m_execution_mutex);
+  m_execution_in_progress = false;
+  cv.notify_one();
 }
 
 void Command::waitForCompletion()
 {
   boost::mutex::scoped_lock lock(m_execution_mutex);
+  cv.wait(lock,[this]() {return !m_execution_in_progress;});
 }
 
 bool Command::wasSuccessful() const
