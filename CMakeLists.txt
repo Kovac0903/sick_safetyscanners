@@ -5,57 +5,13 @@ project(sick_safetyscanners)
 #add_definitions(-std=c++11)
 ## By adding -Wall and -Werror, the compiler does not ignore warnings anymore,
 ## enforcing cleaner code.
-add_definitions(-std=c++11 -Wall)
+add_definitions(-std=c++11 -Wno-ignored-attributes -Wno-narrowing)
 #add_definitions(-std=c++11 -Wall -Werror)
-
-## Find catkin macros and libraries
-find_package(catkin REQUIRED
-  COMPONENTS
-    dynamic_reconfigure
-    message_generation
-    roscpp
-    sensor_msgs
-    std_msgs
-)
 
 ## Find system libraries
 #find_package(Eigen3 REQUIRED)
 find_package(Boost REQUIRED COMPONENTS system thread)
 
-generate_dynamic_reconfigure_options(
-  config/SickSafetyscannersConfiguration.cfg
-)
-
-
-add_message_files(
-  FILES
-  ApplicationDataMsg.msg
-  ApplicationInputsMsg.msg
-  ApplicationOutputsMsg.msg
-  DataHeaderMsg.msg
-  DerivedValuesMsg.msg
-  ExtendedLaserScanMsg.msg
-  FieldMsg.msg
-  GeneralSystemStateMsg.msg
-  IntrusionDataMsg.msg
-  IntrusionDatumMsg.msg
-  MeasurementDataMsg.msg
-  MonitoringCaseMsg.msg
-  OutputPathsMsg.msg
-  RawMicroScanDataMsg.msg
-  ScanPointMsg.msg
-)
-
-add_service_files(
-  FILES
-  FieldData.srv
-)
-
-generate_messages(
-  DEPENDENCIES
-  sensor_msgs
-  std_msgs
-)
 
 ###################################
 ## catkin specific configuration ##
@@ -66,21 +22,6 @@ generate_messages(
 ## LIBRARIES: libraries you create in this project that dependent projects also need
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
-catkin_package(
-  INCLUDE_DIRS
-    include
-#    ${EIGEN3_INCLUDE_DIR}
-  LIBRARIES
-    ${PROJECT_NAME}_core
-  CATKIN_DEPENDS
-    dynamic_reconfigure
-    message_runtime
-    roscpp
-    sensor_msgs
-    std_msgs
-  DEPENDS
-    Boost
-)
 
 
 
@@ -93,7 +34,6 @@ catkin_package(
 ## Your package locations should be listed before other locations
 include_directories(
   include
-  ${catkin_INCLUDE_DIRS}
 #  ${EIGEN3_INCLUDE_DIR}
   ${Boost_INCLUDE_DIRS}
 )
@@ -192,79 +132,14 @@ add_library(${PROJECT_NAME}_core
   src/datastructure/TypeCode.cpp
   src/datastructure/UserName.cpp
 )
-
-## Declare cpp executables
-add_executable(${PROJECT_NAME}_node
-  nodes/${PROJECT_NAME}_node.cpp
-  src/SickSafetyscannersRos.cpp
+target_compile_options(${PROJECT_NAME}_core PUBLIC  -march=native)
+add_executable(${PROJECT_NAME}_main
+  nodes/${PROJECT_NAME}_main.cpp
+  src/sick_class.cpp
 )
 
-## Add dependencies to exported targets, like ROS msgs or srvs
-add_dependencies(${PROJECT_NAME}_core
-  ${${PROJECT_NAME}_EXPORTED_TARGETS}
-  ${catkin_EXPORTED_TARGETS}
-)
-
-add_dependencies(${PROJECT_NAME}_node
-  ${${PROJECT_NAME}_EXPORTED_TARGETS}
-  ${catkin_EXPORTED_TARGETS}
-)
-
-## Specify libraries to link executable targets against
-target_link_libraries(${PROJECT_NAME}_core
-  ${catkin_LIBRARIES}
-)
-
-target_link_libraries(${PROJECT_NAME}_node
+target_link_libraries(${PROJECT_NAME}_main
   ${PROJECT_NAME}_core
-  ${catkin_LIBRARIES}
+  #socket
+  ${Boost_LIBRARIES}
 )
-
-#############
-## Install ##
-#############
-
-# Mark executables and/or libraries for installation
-
-install(
-  TARGETS ${PROJECT_NAME}_core
-  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-)
-
-install(
-  TARGETS ${PROJECT_NAME}_node
-  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-)
-
-# Mark cpp header files for installation
-install(
-  DIRECTORY include/${PROJECT_NAME}/
-  DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
-  FILES_MATCHING PATTERN "*.h"
-)
-
-# Mark other files for installation
-install(
-  DIRECTORY docs launch
-  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
-)
-
-#############
-## Testing ##
-#############
-
-#if(CATKIN_ENABLE_TESTING)
-#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
-## Add gtest based cpp test target and link libraries
-#catkin_add_gtest(${PROJECT_NAME}-test
-#  test/test_ros_package_template.cpp
-#  test/AlgorithmTest.cpp)
-#endif()
-
-#if(TARGET ${PROJECT_NAME}-test)
-#  target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME}_core)
-#  endif()
