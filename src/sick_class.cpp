@@ -10,7 +10,6 @@ SickSafetyscannersRos::SickSafetyscannersRos()
   , m_angle_offset(-90.0)
   , m_use_pers_conf(false)
 {
-	std::cout << "-------usao sam u klasu----------" << std::endl;
 	readParameters();
 	m_communication_settings.setSensorTcpPort(2122);
 
@@ -93,12 +92,10 @@ bool SickSafetyscannersRos::isInitialised()
 
 void SickSafetyscannersRos::receivedUDPPacket(const sick::datastructure::Data& data)
 {
-	std::cout << "ovdje dobijem UUDP paket i projeveravam" << std::endl;
   if (!data.getMeasurementDataPtr()->isEmpty() && !data.getDerivedValuesPtr()->isEmpty())
   {
 
     //sensor_msgs::LaserScan scan = createLaserScanMessage(data);
-    std::cout << " ---> ovje Publisham laser_scan " << std::endl;
     //m_laser_scan_publisher.publish(scan);
 
   	uint16_t num_scan_points = data.getDerivedValuesPtr()->getNumberOfBeams();
@@ -126,7 +123,6 @@ void SickSafetyscannersRos::receivedUDPPacket(const sick::datastructure::Data& d
     //sick_safetyscanners::ExtendedLaserScanMsg extended_scan = createExtendedLaserScanMessage(data);
 
     //m_extended_laser_scan_publisher.publish(extended_scan);
-  	std::cout << " ---> ovje Publisham laser_scan -> 3 " << std::endl;
     //sick_safetyscanners::OutputPathsMsg output_paths = createOutputPathsMessage(data);
     //m_output_path_publisher.publish(output_paths);
   }

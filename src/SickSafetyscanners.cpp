@@ -104,9 +104,7 @@ void SickSafetyscanners::FindSensor(const datastructure::CommSettings& settings,
 void SickSafetyscanners::requestTypeCode(const datastructure::CommSettings& settings,
                                          sick::datastructure::TypeCode& type_code)
 {
-  //std::cout << "-------usao sam u interface----------" << std::endl;
   startTCPConnection(settings);
-  //std::cout << "-------usao sam u interface----------" << std::endl;
   requestTypeCodeInColaSession(type_code);
   stopTCPConnection();
 }
@@ -364,7 +362,6 @@ void SickSafetyscanners::requestFirmwareVersionInColaSession(
 
 void SickSafetyscanners::requestTypeCodeInColaSession(sick::datastructure::TypeCode& type_code)
 {
-  std::cout << "-------usao sam u interface----------" << std::endl;
   sick::cola2::Cola2Session::CommandPtr command_ptr =
     std::make_shared<sick::cola2::TypeCodeVariableCommand>(boost::ref(*m_session_ptr), type_code);
   m_session_ptr->executeCommand(command_ptr);

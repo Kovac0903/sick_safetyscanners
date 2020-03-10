@@ -3,7 +3,6 @@
 
 int main() {
 
-	std::cout<< "hello world" << std::endl;
 	sick::SickSafetyscannersRos microscan3_ros;
 
   return 0;
