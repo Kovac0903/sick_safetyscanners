@@ -2,7 +2,7 @@
 
 namespace sick {
 
-SickSafetyscannersRos::SickSafetyscannersRos()
+SickSafetyscannersQnx::SickSafetyscannersQnx()
   : m_initialised(false)
   , m_time_offset(0.0)
   , m_range_min(0.0)
@@ -14,7 +14,7 @@ SickSafetyscannersRos::SickSafetyscannersRos()
 	m_communication_settings.setSensorTcpPort(2122);
 
 	m_device = std::make_shared<sick::SickSafetyscanners>(
-    boost::bind(&SickSafetyscannersRos::receivedUDPPacket,
+    boost::bind(&SickSafetyscannersQnx::receivedUDPPacket,
     						 this, _1),
      						&m_communication_settings);
  	uint16_t time_blink = 3;
@@ -27,7 +27,7 @@ SickSafetyscannersRos::SickSafetyscannersRos()
 
 	std::cout << "Successfully launched sensor." << std::endl;
 }
-void SickSafetyscannersRos::readTypeCodeSettings()
+void SickSafetyscannersQnx::readTypeCodeSettings()
 {
   std::cout << "Reading Type code settings" << std::endl;
 
@@ -39,7 +39,7 @@ void SickSafetyscannersRos::readTypeCodeSettings()
   m_range_max = type_code.getMaxRange();
 }
 
-bool SickSafetyscannersRos::readParameters()
+bool SickSafetyscannersQnx::readParameters()
 {
 	 m_communication_settings.setSensorTcpPort(2122);
 
@@ -76,7 +76,7 @@ bool SickSafetyscannersRos::readParameters()
   return true;
 }
 
-void SickSafetyscannersRos::readPersistentConfig()
+void SickSafetyscannersQnx::readPersistentConfig()
 {
   std::cout << "Reading Persistent Configuration" << std::endl;
   sick::datastructure::ConfigData config_data;
@@ -85,12 +85,12 @@ void SickSafetyscannersRos::readPersistentConfig()
   m_communication_settings.setEndAngle(config_data.getEndAngle());
 }
 
-bool SickSafetyscannersRos::isInitialised()
+bool SickSafetyscannersQnx::isInitialised()
 {
   return m_initialised;
 }
 
-void SickSafetyscannersRos::receivedUDPPacket(const sick::datastructure::Data& data)
+void SickSafetyscannersQnx::receivedUDPPacket(const sick::datastructure::Data& data)
 {
   if (!data.getMeasurementDataPtr()->isEmpty() && !data.getDerivedValuesPtr()->isEmpty())
   {
@@ -132,6 +132,6 @@ void SickSafetyscannersRos::receivedUDPPacket(const sick::datastructure::Data& d
   //m_raw_data_publisher.publish(raw_data);
 }
 
-SickSafetyscannersRos::~SickSafetyscannersRos() {}
+SickSafetyscannersQnx::~SickSafetyscannersQnx() {}
 
 }//namespace sick

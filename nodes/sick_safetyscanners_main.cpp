@@ -3,7 +3,7 @@
 
 int main() {
 
-	sick::SickSafetyscannersRos microscan3_ros;
+	sick::SickSafetyscannersQnx microscan3_Qnx;
 
   return 0;
 

@@ -49,25 +49,25 @@ inline uint16_t skipToPublishFrequency(int skip)
 }
 
 /*!
- * \brief The SickSafetyscannersRos class
+ * \brief The SickSafetyscannersQnx class
  *
- * Main class for the node to handle the ROS interfacing.
+ * Main class for the node to handle the Qnx interfacing.
  */
-class SickSafetyscannersRos
+class SickSafetyscannersQnx
 {
 public:
 	 /*!
-   * \brief Constructor of the SickSafetyscannersRos
+   * \brief Constructor of the SickSafetyscannersQnx
    *
-   * Constructor of the SickSafetyscannersRos,
+   * Constructor of the SickSafetyscannersQnx,
    * loads all parameters
    */
-  SickSafetyscannersRos();
+  SickSafetyscannersQnx();
    /*!
-   * \brief ~SickSafetyscannersRos
-   * Destructor if the SickSafetyscanners ROS
+   * \brief ~SickSafetyscannersQnx
+   * Destructor if the SickSafetyscanners Qnx
    */
-  virtual ~SickSafetyscannersRos();
+  virtual ~SickSafetyscannersQnx();
 private:
 
 	bool m_initialised;
