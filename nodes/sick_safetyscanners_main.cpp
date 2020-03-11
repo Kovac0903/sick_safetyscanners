@@ -1,10 +1,14 @@
-#include "sick_safetyscanners/sick_class.h"
 #include <iostream>
+#include "sick_safetyscanners/c_api.h"
 
 int main() {
 
-	sick::SickSafetyscannersQnx microscan3_Qnx;
-
+	SickSafetyscannersC *microscan3_Qnx =
+	SickSafetyscanners_create();
+	while (true) {
+		//std::cout << "/* message */" << '\n';
+	}
+	SickSafetyscanners_destroy(&microscan3_Qnx);
   return 0;
 
 }

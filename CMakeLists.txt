@@ -40,6 +40,7 @@ include_directories(
 
 ## Declare a cpp library
 add_library(${PROJECT_NAME}_core
+  src/c_api.cpp
   src/SickSafetyscanners.cpp
   src/cola2/ApplicationNameVariableCommand.cpp
   src/cola2/ChangeCommSettingsCommand.cpp
