@@ -1,5 +1,5 @@
 #include<iostream>
-
+#include<chrono>
 // STD
 //#include <string>
 //#include <vector>
@@ -83,6 +83,12 @@ private:
   bool m_use_sick_angles;
   float m_angle_offset;
   bool m_use_pers_conf;
+
+  struct RawLidarData {
+  uint16_t time;
+  std::vector<double> scan_distances;
+  std::vector<double> remission_data;
+}m_RawLidarData;
 
     /*!
    * @brief Reads and %%%verifies%%% the parameters.

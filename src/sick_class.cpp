@@ -95,41 +95,26 @@ void SickSafetyscannersQnx::receivedUDPPacket(const sick::datastructure::Data& d
   if (!data.getMeasurementDataPtr()->isEmpty() && !data.getDerivedValuesPtr()->isEmpty())
   {
 
-    //sensor_msgs::LaserScan scan = createLaserScanMessage(data);
-    //m_laser_scan_publisher.publish(scan);
-
   	uint16_t num_scan_points = data.getDerivedValuesPtr()->getNumberOfBeams();
 
   	  std::vector<sick::datastructure::ScanPoint> scan_points =
     data.getMeasurementDataPtr()->getScanPointsVector();
+    m_RawLidarData.time = data.getDerivedValuesPtr()->getScanTime();
+
+    m_RawLidarData.scan_distances.clear();
+    m_RawLidarData.scan_distances.reserve((double) num_scan_points);
+
+    m_RawLidarData.remission_data.clear();
+    m_RawLidarData.remission_data.reserve((double) num_scan_points);
 	  for (uint16_t i = 0; i < num_scan_points; ++i)
 	  {
 	    const sick::datastructure::ScanPoint scan_point = scan_points.at(i);
-	    std::cout << scan_point.getDistance() << std::endl;
-	    std::cout << static_cast<float>(scan_point.getReflectivity()) << std::endl;
-
-
-	    //scan.ranges[i]                                  = static_cast<float>(scan_point.getDistance()) *
-	    //                 data.getDerivedValuesPtr()->getMultiplicationFactor() * 1e-3; // mm -> m
-	    //scan.intensities[i] = static_cast<float>(scan_point.getReflectivity());
+      m_RawLidarData.scan_distances.push_back(scan_point.getDistance());
+      m_RawLidarData.remission_data.push_back(
+        static_cast<float>(scan_point.getReflectivity()));
 	  }
-
-
+    std::cout << "scan processed" << '\n';
   }
-
-
-  if (!data.getMeasurementDataPtr()->isEmpty() && !data.getDerivedValuesPtr()->isEmpty())
-  {
-    //sick_safetyscanners::ExtendedLaserScanMsg extended_scan = createExtendedLaserScanMessage(data);
-
-    //m_extended_laser_scan_publisher.publish(extended_scan);
-    //sick_safetyscanners::OutputPathsMsg output_paths = createOutputPathsMessage(data);
-    //m_output_path_publisher.publish(output_paths);
-  }
-
-  //sick_safetyscanners::RawMicroScanDataMsg raw_data = createRawDataMessage(data);
-
-  //m_raw_data_publisher.publish(raw_data);
 }
 
 SickSafetyscannersQnx::~SickSafetyscannersQnx() {}
