@@ -9,6 +9,7 @@ SickSafetyscannersQnx::SickSafetyscannersQnx()
   , m_range_max(0.0)
   , m_angle_offset(-90.0)
   , m_use_pers_conf(false)
+  , m_first_run(true)
 {
 	readParameters();
 	m_communication_settings.setSensorTcpPort(2122);
@@ -94,26 +95,51 @@ void SickSafetyscannersQnx::receivedUDPPacket(const sick::datastructure::Data& d
 {
   if (!data.getMeasurementDataPtr()->isEmpty() && !data.getDerivedValuesPtr()->isEmpty())
   {
-
   	uint16_t num_scan_points = data.getDerivedValuesPtr()->getNumberOfBeams();
 
-  	  std::vector<sick::datastructure::ScanPoint> scan_points =
+    if (m_first_run){
+      m_RawLidarData.remission_data.resize((double) num_scan_points);
+      m_RawLidarData.scan_distances.resize((double) num_scan_points);
+      m_first_run = false;
+    }
+
+  	std::vector<sick::datastructure::ScanPoint> scan_points =
     data.getMeasurementDataPtr()->getScanPointsVector();
     m_RawLidarData.time = data.getDerivedValuesPtr()->getScanTime();
 
-    m_RawLidarData.scan_distances.clear();
-    m_RawLidarData.scan_distances.reserve((double) num_scan_points);
-
-    m_RawLidarData.remission_data.clear();
-    m_RawLidarData.remission_data.reserve((double) num_scan_points);
 	  for (uint16_t i = 0; i < num_scan_points; ++i)
 	  {
 	    const sick::datastructure::ScanPoint scan_point = scan_points.at(i);
-      m_RawLidarData.scan_distances.push_back(scan_point.getDistance());
-      m_RawLidarData.remission_data.push_back(
-        static_cast<float>(scan_point.getReflectivity()));
+      m_RawLidarData.scan_distances.at(i) = scan_point.getDistance();
+      m_RawLidarData.remission_data.at(i)=
+        static_cast<float>(scan_point.getReflectivity());
 	  }
     std::cout << "scan processed" << '\n';
+  }
+}
+int64_t SickSafetyscannersQnx::getRawSickDataTime(){
+  return c_sick_data.time;
+}
+
+int SickSafetyscannersQnx::getRawSickDataNumPoints(){
+  return c_sick_data.num_points;
+}
+
+void SickSafetyscannersQnx::getRawSickDataDistances(
+  double *scan_distances)
+{
+  for (uint16_t i = 0; i < m_RawLidarData.scan_distances.size(); ++i)
+  {
+    *(scan_distances+i) = m_RawLidarData.scan_distances.at(i);
+  }
+}
+
+void SickSafetyscannersQnx::getRawSickDataRemission(
+  double *remission_data)
+{
+  for (uint16_t i = 0; i < m_RawLidarData.remission_data.size(); ++i)
+  {
+    *(remission_data+i) = m_RawLidarData.remission_data.at(i);
   }
 }
 

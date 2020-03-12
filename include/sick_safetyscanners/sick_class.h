@@ -10,6 +10,7 @@
 //#include <sick_safetyscanners/SickSafetyscanners/ConfigurationConfig.h>
 #include <sick_safetyscanners/datastructure/CommSettings.h>
 #include <sick_safetyscanners/datastructure/FieldData.h>
+#include "sick_safetyscanners/c_api.h"
 
 #include <cmath>
 
@@ -68,9 +69,15 @@ public:
    * Destructor if the SickSafetyscanners Qnx
    */
   virtual ~SickSafetyscannersQnx();
+
+  int64_t getRawSickDataTime();
+  int getRawSickDataNumPoints();
+  void getRawSickDataDistances(double *scan_distances);
+  void getRawSickDataRemission(double *remission_data);
 private:
 
 	bool m_initialised;
+  bool m_first_run;
 
 	std::shared_ptr<sick::SickSafetyscanners> m_device;
 	sick::datastructure::CommSettings m_communication_settings;
@@ -88,7 +95,8 @@ private:
   uint16_t time;
   std::vector<double> scan_distances;
   std::vector<double> remission_data;
-}m_RawLidarData;
+  }m_RawLidarData;
+
 
     /*!
    * @brief Reads and %%%verifies%%% the parameters.
@@ -102,7 +110,6 @@ private:
    * \param data, the assortment of all data from the sensor
    */
   void receivedUDPPacket(const datastructure::Data& data);
-
 	bool isInitialised();
   void readTypeCodeSettings();
   void readPersistentConfig();
