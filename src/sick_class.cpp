@@ -118,11 +118,11 @@ void SickSafetyscannersQnx::receivedUDPPacket(const sick::datastructure::Data& d
   }
 }
 int64_t SickSafetyscannersQnx::getRawSickDataTime(){
-  return c_sick_data.time;
+  return m_RawLidarData.time;
 }
 
 int SickSafetyscannersQnx::getRawSickDataNumPoints(){
-  return c_sick_data.num_points;
+  return m_RawLidarData.scan_distances.size();
 }
 
 void SickSafetyscannersQnx::getRawSickDataDistances(
