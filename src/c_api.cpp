@@ -2,10 +2,10 @@
 
 
 
-extern "C" SickSafetyscannersC* SickSafetyscanners_create()
+extern "C" SickSafetyscannersC* SickSafetyscanners_create(SickCommunicationParameters param)
 {
   return reinterpret_cast<SickSafetyscannersC*>(
-    new sick::SickSafetyscannersQnx());
+    new sick::SickSafetyscannersQnx(param));
 }
 
 extern "C" void SickSafetyscanners_destroy(

@@ -2,7 +2,7 @@
 
 namespace sick {
 
-SickSafetyscannersQnx::SickSafetyscannersQnx()
+SickSafetyscannersQnx::SickSafetyscannersQnx(SickCommunicationParameters param)
   : m_initialised(false)
   , m_time_offset(0.0)
   , m_range_min(0.0)
@@ -11,7 +11,7 @@ SickSafetyscannersQnx::SickSafetyscannersQnx()
   , m_use_pers_conf(false)
   , m_first_run(true)
 {
-	readParameters();
+	readParameters(param);
 	m_communication_settings.setSensorTcpPort(2122);
 
 	m_device = std::make_shared<sick::SickSafetyscanners>(
@@ -40,40 +40,31 @@ void SickSafetyscannersQnx::readTypeCodeSettings()
   m_range_max = type_code.getMaxRange();
 }
 
-bool SickSafetyscannersQnx::readParameters()
+bool SickSafetyscannersQnx::readParameters(SickCommunicationParameters param)
 {
-	 m_communication_settings.setSensorTcpPort(2122);
+	m_communication_settings.setSensorTcpPort(2122);
 
-  std::string sensor_ip_adress = "169.254.249.81";
-  m_communication_settings.setSensorIp(sensor_ip_adress);
+  m_communication_settings.setSensorIp(param.sensor_ip_adress);
 
-  std::string host_ip_adress = "169.254.249.82";
-  m_communication_settings.setHostIp(host_ip_adress);
+  m_communication_settings.setHostIp(param.host_ip_adress);
 
-  int host_udp_port = 0;
-  m_communication_settings.setHostUdpPort(host_udp_port);
+  m_communication_settings.setHostUdpPort(param.host_udp_port);
 
-  int channel = 0;
-  m_communication_settings.setChannel(channel);
+  m_communication_settings.setChannel(param.channel);
 
   m_communication_settings.setEnabled(true);
 
 	// skip to publishing freq
-  m_communication_settings.setStartAngle(0);
-  m_communication_settings.setEndAngle(0);
-  int skip = 0;
-  m_communication_settings.setPublishingFrequency(
-  	skipToPublishFrequency(skip));
+  m_communication_settings.setStartAngle(param.start_angle);
+  m_communication_settings.setEndAngle(param.start_angle);
 
-  bool general_system_state = true;
-	bool derived_settings = true;
-	bool measurement_data = true;
-	bool intrusion_data = true;
-	bool application_io_data = true;
+  m_communication_settings.setPublishingFrequency(
+  	skipToPublishFrequency(param.skip));
 
   m_communication_settings.setFeatures(
-    general_system_state, derived_settings,
-    measurement_data, intrusion_data, application_io_data);
+    param.general_system_state, param.derived_settings,
+    param.measurement_data, param.intrusion_data,
+    param.application_io_data);
   return true;
 }
 

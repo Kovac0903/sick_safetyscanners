@@ -63,7 +63,7 @@ public:
    * Constructor of the SickSafetyscannersQnx,
    * loads all parameters
    */
-  SickSafetyscannersQnx();
+  SickSafetyscannersQnx(SickCommunicationParameters param);
    /*!
    * \brief ~SickSafetyscannersQnx
    * Destructor if the SickSafetyscanners Qnx
@@ -102,7 +102,7 @@ private:
    * @brief Reads and %%%verifies%%% the parameters.
    * @return True if successful.
    */
-  bool readParameters();
+  bool readParameters(SickCommunicationParameters param);
 
    /*!
    * \brief Function which is called
