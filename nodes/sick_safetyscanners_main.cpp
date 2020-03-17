@@ -27,8 +27,10 @@ int main() {
 	(*data).remission_data = (double *)malloc(sizeof(double) * 715);
 
 	 while (true) {
-		SickSafetyscanners_getScanData(microscan3_Qnx,data);
-		//std::cout << " Raw_sick_DATA->  " << *((*data).scan_distances+714) << '\n';
+		if (SickSafetyscanners_getScanData(microscan3_Qnx,data))
+		{
+			std::cout << " Timestamp: " << (*data).time << '\n';	
+		}
 	 }
 
 	printf("a\n");

@@ -69,7 +69,7 @@ public:
    * Destructor if the SickSafetyscanners Qnx
    */
   virtual ~SickSafetyscannersQnx();
-
+  bool newScan();
   int64_t getRawSickDataTime();
   int getRawSickDataNumPoints();
   void getRawSickDataDistances(double *scan_distances);
@@ -78,6 +78,7 @@ private:
 
 	bool m_initialised;
   bool m_first_run;
+  bool m_new_scan_flag;
 
 	std::shared_ptr<sick::SickSafetyscanners> m_device;
 	sick::datastructure::CommSettings m_communication_settings;

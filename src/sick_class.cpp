@@ -10,6 +10,7 @@ SickSafetyscannersQnx::SickSafetyscannersQnx(SickCommunicationParameters param)
   , m_angle_offset(-90.0)
   , m_use_pers_conf(false)
   , m_first_run(true)
+  , m_new_scan_flag(true)
 {
 	readParameters(param);
 	m_communication_settings.setSensorTcpPort(2122);
@@ -112,9 +113,18 @@ void SickSafetyscannersQnx::receivedUDPPacket(const sick::datastructure::Data& d
       m_RawLidarData.remission_data.at(i)=
         static_cast<float>(scan_point.getReflectivity());
 	  }
-    //std::cout << "scan processed" << '\n';
+    std::cout << "scan processed" << '\n';
+    m_new_scan_flag = true;
   }
 }
+bool SickSafetyscannersQnx::newScan(){
+  if (m_new_scan_flag)
+  {
+    m_new_scan_flag = false;
+    return true;
+  }
+}
+
 int64_t SickSafetyscannersQnx::getRawSickDataTime(){
   return m_RawLidarData.time;
 }
