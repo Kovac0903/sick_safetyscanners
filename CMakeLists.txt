@@ -39,8 +39,9 @@ include_directories(
 )
 
 ## Declare a cpp library
-add_library(${PROJECT_NAME}_core
-  src/c_api.cpp
+add_library(${PROJECT_NAME}_core SHARED
+  #src/c_api.cpp
+  src/sick_class.cpp
   src/SickSafetyscanners.cpp
   src/cola2/ApplicationNameVariableCommand.cpp
   src/cola2/ChangeCommSettingsCommand.cpp
@@ -133,14 +134,26 @@ add_library(${PROJECT_NAME}_core
   src/datastructure/TypeCode.cpp
   src/datastructure/UserName.cpp
 )
+add_library(${PROJECT_NAME}_c_api SHARED
+  src/c_api.cpp
+)
 target_compile_options(${PROJECT_NAME}_core PUBLIC  -march=native)
+
+
 add_executable(${PROJECT_NAME}_main
   nodes/${PROJECT_NAME}_main.cpp
-  src/sick_class.cpp
+  #src/sick_class.cpp
 )
+ target_link_libraries(${PROJECT_NAME}_c_api
+   ${PROJECT_NAME}_core
+   #socket
+   ${Boost_LIBRARIES}
+ )
+
+target_compile_options(${PROJECT_NAME}_c_api PUBLIC  -march=native)
 
 target_link_libraries(${PROJECT_NAME}_main
-  ${PROJECT_NAME}_core
+  ${PROJECT_NAME}_c_api
   #socket
   ${Boost_LIBRARIES}
 )
