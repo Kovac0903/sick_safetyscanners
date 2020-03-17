@@ -96,7 +96,14 @@ void SickSafetyscannersQnx::receivedUDPPacket(const sick::datastructure::Data& d
 
   	std::vector<sick::datastructure::ScanPoint> scan_points =
     data.getMeasurementDataPtr()->getScanPointsVector();
-    m_RawLidarData.time = data.getDerivedValuesPtr()->getScanTime();
+    const auto time = std::chrono::system_clock::now();
+
+
+    m_RawLidarData.time = std::chrono::nanoseconds(time.time_since_epoch()).count();
+    //std::cout << "nanoseconds since epoch: "
+    //          << m_RawLidarData.time
+    //          << '\n';
+
 
 	  for (uint16_t i = 0; i < num_scan_points; ++i)
 	  {

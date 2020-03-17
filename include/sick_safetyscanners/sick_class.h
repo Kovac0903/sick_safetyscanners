@@ -92,7 +92,7 @@ private:
   bool m_use_pers_conf;
 
   struct RawLidarData {
-  uint16_t time;
+  int64_t time;
   std::vector<double> scan_distances;
   std::vector<double> remission_data;
   }m_RawLidarData;
