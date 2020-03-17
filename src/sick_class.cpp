@@ -105,7 +105,7 @@ void SickSafetyscannersQnx::receivedUDPPacket(const sick::datastructure::Data& d
       m_RawLidarData.remission_data.at(i)=
         static_cast<float>(scan_point.getReflectivity());
 	  }
-    std::cout << "scan processed" << '\n';
+    //std::cout << "scan processed" << '\n';
   }
 }
 int64_t SickSafetyscannersQnx::getRawSickDataTime(){
