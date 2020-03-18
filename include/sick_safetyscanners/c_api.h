@@ -35,5 +35,8 @@ extern "C" 	SickSafetyscannersC* SickSafetyscanners_create(
 extern "C" void SickSafetyscanners_destroy(
   SickSafetyscannersC** pself);
 
+extern "C" int SickSafetyscanners_getNumPoints(
+  SickSafetyscannersC* self);
+
 extern "C" bool SickSafetyscanners_getScanData(
   SickSafetyscannersC* self,RawSickDataC* data_);

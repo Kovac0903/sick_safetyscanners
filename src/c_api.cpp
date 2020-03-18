@@ -15,21 +15,27 @@ extern "C" void SickSafetyscanners_destroy(
   *pself = NULL;
 }
 
+extern "C" int SickSafetyscanners_getNumPoints(SickSafetyscannersC* self)
+{
+  auto* plaser = reinterpret_cast<sick::SickSafetyscannersQnx*>(self);
+  return plaser->getRawSickDataNumPoints();
+}
+
 extern "C" bool SickSafetyscanners_getScanData(
   SickSafetyscannersC* self,RawSickDataC* data_)
 {
-  auto* pekf = reinterpret_cast<sick::SickSafetyscannersQnx*>(self);
+  auto* plaser = reinterpret_cast<sick::SickSafetyscannersQnx*>(self);
 
-  if (!(pekf->newScan())) return false;
+  if (!(plaser->newScan())) return false;
 
   else
   {
 
-    (*data_).time = pekf->getRawSickDataTime();
-    (*data_).num_points = pekf->getRawSickDataNumPoints();
+    (*data_).time = plaser->getRawSickDataTime();
+    (*data_).num_points = plaser->getRawSickDataNumPoints();
 
-    pekf->getRawSickDataDistances((*data_).scan_distances);
-    pekf->getRawSickDataRemission((*data_).remission_data);
+    plaser->getRawSickDataDistances((*data_).scan_distances);
+    plaser->getRawSickDataRemission((*data_).remission_data);
     return true;
   }
 

@@ -22,14 +22,22 @@ int main() {
 
 	SickSafetyscannersC *microscan3_Qnx =
 	SickSafetyscanners_create(param);
+
 	RawSickDataC* data;
-	(*data).scan_distances = (double *)malloc(sizeof(double) * 715);
-	(*data).remission_data = (double *)malloc(sizeof(double) * 715);
+	int size = 0;
+
+	while(size == 0)
+	{
+	size = SickSafetyscanners_getNumPoints(microscan3_Qnx);
+	(*data).scan_distances = (double *)malloc(sizeof(double) * size);
+	(*data).remission_data = (double *)malloc(sizeof(double) * size);
+	}
 
 	 while (true) {
 		if (SickSafetyscanners_getScanData(microscan3_Qnx,data))
 		{
-			std::cout << " Timestamp: " << (*data).time << '\n';	
+			std::cout << " Timestamp: " << (*data).time << '\n'
+								<< " Num points: " << (*data).num_points << '\n';
 		}
 	 }
 
